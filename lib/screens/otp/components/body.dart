@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
 import 'otp_form.dart';
 
 class Body extends StatelessWidget {
+  SharedPreferences? sp;
+  getSharedPreferences() async {
+    SharedPreferences sp_ = await SharedPreferences.getInstance();
+    sp = sp_;
+  }
+
   @override
   Widget build(BuildContext context) {
+    getSharedPreferences();
+
     return SizedBox(
       width: double.infinity,
       child: Padding(
@@ -20,7 +29,7 @@ class Body extends StatelessWidget {
                 "OTP Verification",
                 style: headingStyle,
               ),
-              Text("We sent your code to +1 898 860 ***"),
+              Text("We sent your code to ${sp!.getString('phone')} ***"),
               buildTimer(),
               OtpForm(),
               SizedBox(height: SizeConfig.screenHeight * 0.1),

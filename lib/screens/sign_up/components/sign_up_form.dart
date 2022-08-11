@@ -1,8 +1,11 @@
+import 'package:e_commerce/Providers/Auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce/components/custom_surfix_icon.dart';
 import 'package:e_commerce/components/default_button.dart';
 import 'package:e_commerce/components/form_error.dart';
 import 'package:e_commerce/screens/complete_profile/complete_profile_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
@@ -45,14 +48,26 @@ class _SignUpFormState extends State<SignUpForm> {
           buildPasswordFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
           buildConformPassFormField(),
+          SizedBox(height: getProportionateScreenHeight(30)),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Continue",
-            press: () {
+            press: () async {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
                 // if all are valid then go to success screen
+                String id = await Provider.of<UserAuth>(context, listen: false)
+                    .signUp(email!, password!);
+
+                SharedPreferences sp = await SharedPreferences.getInstance();
+                sp.setString('id', id);
+                sp.setString('email', email!);
+                if (remember) {
+                  sp.setString('password', password!);
+                  sp.setBool('remembered', true);
+                } else {}
+                ;
                 Navigator.pushNamed(context, CompleteProfileScreen.routeName);
               }
             },
