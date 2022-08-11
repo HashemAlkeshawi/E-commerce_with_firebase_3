@@ -23,6 +23,13 @@ class Body extends StatelessWidget {
             press: () {},
           ),
           ProfileMenu(
+            text: "Add new category",
+            icon: "assets/icons/Settings.svg",
+            press: () {
+              // Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) =>)
+            },
+          ),
+          ProfileMenu(
             text: "Settings",
             icon: "assets/icons/Settings.svg",
             press: () {},

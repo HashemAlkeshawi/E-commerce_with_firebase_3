@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../components/default_button.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
+import '../../sign_in/sign_in_screen.dart';
 
 class OtpForm extends StatefulWidget {
   const OtpForm({
@@ -109,7 +110,10 @@ class _OtpFormState extends State<OtpForm> {
           SizedBox(height: SizeConfig.screenHeight * 0.15),
           DefaultButton(
             text: "Continue",
-            press: () {},
+            press: () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => SignInScreen()));
+            },
           )
         ],
       ),

@@ -1,6 +1,8 @@
+import 'package:e_commerce/Providers/Auth.dart';
 import 'package:e_commerce/components/form_error.dart';
 import 'package:e_commerce/helper/keyboard.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/default_button.dart';
@@ -72,10 +74,12 @@ class _SignFormState extends State<SignForm> {
           SizedBox(height: getProportionateScreenHeight(20)),
           DefaultButton(
             text: "Continue",
-            press: () {
+            press: () async {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
                 // if all are valid then go to success screen
+                await Provider.of<UserAuth>(context, listen: false)
+                    .signIn(email!, password!);
                 KeyboardUtil.hideKeyboard(context);
                 Navigator.pushNamed(context, LoginSuccessScreen.routeName);
               }
