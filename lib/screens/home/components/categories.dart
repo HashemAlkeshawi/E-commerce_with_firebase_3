@@ -1,33 +1,88 @@
+import 'dart:developer';
+
+import 'package:e_commerce/Providers/FirestoreProvider.dart';
+import 'package:e_commerce/screens/products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../../size_config.dart';
+import '../../complete_profile/CategoriesScreens/UpdateCategory.dart';
 
 class Categories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> categories = [
-      {"icon": "assets/icons/Flash Icon.svg", "text": "Flash Deal"},
-      {"icon": "assets/icons/Bill Icon.svg", "text": "Bill"},
-      {"icon": "assets/icons/Game Icon.svg", "text": "Game"},
-      {"icon": "assets/icons/Gift Icon.svg", "text": "Daily Gift"},
-      {"icon": "assets/icons/Discover.svg", "text": "More"},
-    ];
-    return Padding(
-      padding: EdgeInsets.all(getProportionateScreenWidth(20)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: List.generate(
-          categories.length,
-          (index) => CategoryCard(
-            icon: categories[index]["icon"],
-            text: categories[index]["text"],
-            press: () {},
-          ),
-        ),
-      ),
-    );
+    return Container(
+        child: Consumer<FirestoreProvider>(builder: (x, provider, y) {
+      return Container(
+          width: MediaQuery.of(context).size.width,
+          height: 300,
+          padding: EdgeInsets.all(getProportionateScreenWidth(20)),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount:
+                provider.categories == null ? 0 : provider.categories!.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              products(provider.categories![index].catId)));
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  height: 300,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                          height: 150,
+                          child: Image.network(
+                              provider.categories![index].imageUrl)),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        '${provider.categories![index].name}',
+                      ),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                provider.deleteCategory(
+                                    provider.categories![index].catId);
+                              },
+                              child: Icon(Icons.delete)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UpdateCategory(
+                                            provider.categories![index])));
+                              },
+                              child: Icon(Icons.update))
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+          )
+          //  List.generate(
+          //   provider.categories == null ? 0 : provider.categories!.length,
+          //   (index) =>
+          //
+          // ),
+
+          );
+    }));
   }
 }
 

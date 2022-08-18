@@ -1,6 +1,7 @@
 import 'package:e_commerce/Providers/Auth.dart';
 import 'package:e_commerce/components/form_error.dart';
 import 'package:e_commerce/helper/keyboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -78,10 +79,21 @@ class _SignFormState extends State<SignForm> {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
                 // if all are valid then go to success screen
-                await Provider.of<UserAuth>(context, listen: false)
-                    .signIn(email!, password!);
+                UserCredential? userCredential =
+                    await Provider.of<UserAuth>(context, listen: false)
+                        .signIn(email!, password!);
                 KeyboardUtil.hideKeyboard(context);
-                Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+                if (userCredential != null) {
+                  Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Incorrect Email or Password'),
+                        );
+                      });
+                }
               }
             },
           ),

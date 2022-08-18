@@ -57,18 +57,28 @@ class _SignUpFormState extends State<SignUpForm> {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
                 // if all are valid then go to success screen
-                String id = await Provider.of<UserAuth>(context, listen: false)
+                String? id = await Provider.of<UserAuth>(context, listen: false)
                     .signUp(email!, password!);
 
-                SharedPreferences sp = await SharedPreferences.getInstance();
-                sp.setString('id', id);
-                sp.setString('email', email!);
-                if (remember) {
-                  sp.setString('password', password!);
-                  sp.setBool('remembered', true);
-                } else {}
-                ;
-                Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                if (id == null) {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                            content: Text('Check your internet connection'),
+                            title: Text('somthing went wrong!'));
+                      });
+                } else {
+                  SharedPreferences sp = await SharedPreferences.getInstance();
+                  sp.setString('id', id!);
+                  sp.setString('email', email!);
+                  if (remember) {
+                    sp.setString('password', password!);
+                    sp.setBool('remembered', true);
+                  } else {}
+                  ;
+                  Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                }
               }
             },
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../complete_profile/CategoriesScreens/AddCategory.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 
@@ -26,7 +27,8 @@ class Body extends StatelessWidget {
             text: "Add new category",
             icon: "assets/icons/Settings.svg",
             press: () {
-              // Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) =>)
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: ((context) => AddCategory())));
             },
           ),
           ProfileMenu(

@@ -26,9 +26,9 @@ class UserAuth extends ChangeNotifier {
 
   signIn(String email, String password) async {
     try {
-      await firebaseauthInstance.signInWithEmailAndPassword(
-          email: email, password: password);
-      print("signed in");
+      UserCredential userCredential = await firebaseauthInstance
+          .signInWithEmailAndPassword(email: email, password: password);
+      return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
